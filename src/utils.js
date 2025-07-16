@@ -19,7 +19,7 @@ const wsReadyStateConnecting = 0
 const wsReadyStateOpen = 1
 const wsReadyStateClosing = 2 // eslint-disable-line
 const wsReadyStateClosed = 3 // eslint-disable-line
-
+const messageCustomPing = 123
 // disable gc when using snapshots!
 const gcEnabled = process.env.GC !== 'false' && process.env.GC !== '0'
 // const persistenceDir = process.env.YPERSISTENCE
@@ -171,6 +171,14 @@ const messageListener = (conn, doc, message) => {
         break
       case messageAwareness: {
         awarenessProtocol.applyAwarenessUpdate(doc.awareness, decoding.readVarUint8Array(decoder), conn)
+        break
+      }
+      case messageCustomPing: {
+        const sentAt = decoding.readVarUint(decoder)
+        const encoder = encoding.createEncoder()
+        encoding.writeVarUint(encoder, messageCustomPing)
+        encoding.writeVarUint(encoder, sentAt)
+        send(doc, conn, encoding.toUint8Array(encoder))
         break
       }
     }

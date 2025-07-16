@@ -94,6 +94,9 @@ const wsProvider = new WebsocketProvider(
 
 The server will verify that the user has `DELIVERABLE_READ` permission before allowing the WebSocket connection.
 
+## Build docker image if you are on mac
+docker buildx build --platform linux/amd64 -t bizzdesign/unify/websocket-server --load .
+
 ## License
 
 [The MIT License](./LICENSE) © Kevin Jahns
